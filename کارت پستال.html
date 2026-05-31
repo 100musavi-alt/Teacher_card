@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>کارت پستال معلم</title>
+<style>
+body{font-family:tahoma;background:linear-gradient(135deg,#ffe6e6,#fff7d6);display:flex;justify-content:center;align-items:center;min-height:100vh;margin:0}
+.box{background:white;padding:20px;border-radius:20px;max-width:700px;width:95%;box-shadow:0 10px 30px rgba(0,0,0,.2);text-align:center}
+input{width:90%;padding:10px;margin:8px;border-radius:10px;border:1px solid #ccc}
+button{padding:10px 20px;border:none;border-radius:10px;cursor:pointer}
+.card{margin:auto;width:320px;height:220px;background:#f8d48a;border-radius:15px;display:flex;justify-content:center;align-items:center;font-size:28px;cursor:pointer}
+.letter{display:none;margin-top:15px;padding:20px;border:2px dashed #d4a017;border-radius:15px}
+img{max-width:220px;border-radius:15px}
+#result{display:none}
+textarea{width:95%;height:70px}
+
+.close-btn{
+position:fixed;top:10px;left:10px;width:35px;height:35px;
+border-radius:50%;font-size:20px;background:#e74c3c;color:white;
+}
+.footer-designer{
+margin-top:20px;font-size:10px;color:#777;
+}
+</style>
+</head>
+<body>
+<button class="close-btn" onclick="window.close()">✕</button><div class="box">
+
+<div id="builder">
+<h2>سازنده کارت پستال</h2>
+<input id="teacher" placeholder="نام معلم">
+<input id="student" placeholder="نام دانش‌آموز">
+<input id="photo" type="file" accept="image/*">
+<button onclick="createCard()">ساخت لینک اختصاصی</button>
+<div id="link"></div>
+</div>
+
+<div id="result">
+<div class="card" onclick="openLetter()">📩 نامه‌ای برای <span id="sname"></span></div>
+<div class="letter" id="letter">
+<img id="img"><br><br>
+<h3 id="title"></h3>
+<p>
+عزیز دل من، هر روز که تلاش می‌کنی، آینده‌ای روشن‌تر برای خودت می‌سازی.
+به توانایی‌هایت ایمان داشته باش؛ من به تو افتخار می‌کنم و برایت بهترین‌ها را آرزو دارم.
+</p>
+<p id="teacherText"></p>
+</div>
+</div>
+
+<div class="footer-designer">طراح: سیدمحمد موسوی زاده</div></div>
+
+<script>
+function createCard(){
+ const teacher=document.getElementById('teacher').value;
+ const student=document.getElementById('student').value;
+ const file=document.getElementById('photo').files[0];
+ if(!teacher||!student||!file){alert('همه موارد را وارد کنید');return;}
+ const r=new FileReader();
+ r.onload=function(){
+   const url=location.origin+location.pathname+'?teacher='+encodeURIComponent(teacher)+'&student='+encodeURIComponent(student)+'&img='+encodeURIComponent(r.result);
+   document.getElementById('link').innerHTML='<br><input value="'+url+'" onclick="this.select()">';
+ }
+ r.readAsDataURL(file);
+}
+
+function openLetter(){
+ document.getElementById('letter').style.display='block';
+}
+
+const p=new URLSearchParams(location.search);
+if(p.get('teacher')&&p.get('student')){
+ document.getElementById('builder').style.display='none';
+ document.getElementById('result').style.display='block';
+ document.getElementById('sname').textContent=p.get('student');
+ document.getElementById('title').textContent=p.get('student')+' عزیز';
+ document.getElementById('teacherText').textContent='از طرف معلمت: '+p.get('teacher');
+ document.getElementById('img').src=p.get('img');
+}
+</script>
+</body>
+</html>
